@@ -10,7 +10,7 @@
 
 DAEMON=/opt/prometheus/node_exporter
 NAME=node_exporter
-
+USER=prometheus
 PIDFILE=/var/run/prometheus/$NAME.pid
 LOGFILE=/var/log/prometheus/$NAME.log
 
@@ -29,7 +29,7 @@ do_start_cmd()
 {
     do_start_prepare
     echo -n "Starting daemon: "$NAME
-	start-stop-daemon --background --start --quiet --pidfile $PIDFILE --make-pidfile --exec $DAEMON -- $ARGS >> $LOGFILE 2>&1
+	start-stop-daemon --chuid $USER --background --start --quiet --pidfile $PIDFILE --make-pidfile --exec $DAEMON -- $ARGS >> $LOGFILE 2>&1
 	echo "."
 }
 

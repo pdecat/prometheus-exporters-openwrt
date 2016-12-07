@@ -17,9 +17,6 @@ LOGFILE=/var/log/prometheus/$NAME.log
 ARGS=""
 [ -r /etc/default/$NAME ] && . /etc/default/$NAME
 
-HELPER=/usr/bin/daemon
-HELPER_ARGS="--name=$NAME --output=$LOGFILE --pidfile=$PIDFILE"
-
 do_start_prepare()
 {
     mkdir -p `dirname $PIDFILE` || true
@@ -30,34 +27,18 @@ do_start_prepare()
 
 do_start_cmd()
 {
-    # Return
-    #   0 if daemon has been started
-    #   1 if daemon was already running
-    #   2 if daemon could not be started
     do_start_prepare
-    echo 'Starting service…' >&2
-    $HELPER $HELPER_ARGS --running && return 1
-    $HELPER $HELPER_ARGS -- $DAEMON $ARGS || return 2
-    echo 'Service started' >&2
-    return 0
+    echo -n "Starting daemon: "$NAME
+	start-stop-daemon --background --start --quiet --pidfile $PIDFILE --make-pidfile --exec $DAEMON -- $ARGS >> $LOGFILE 2>&1
+	echo "."
 }
 
 do_stop_cmd()
 {
-    # Return
-    #   0 if daemon has been stopped
-    #   1 if daemon was already stopped
-    #   2 if daemon could not be stopped
-    #   other if a failure occurred
-    $HELPER $HELPER_ARGS --running || return 1
-    $HELPER $HELPER_ARGS --stop || return 2
-    # wait for the process to really terminate
-    for n in 1 2 3 4 5; do
-        sleep 1
-        $HELPER $HELPER_ARGS --running || break
-    done
-    $HELPER $HELPER_ARGS --running || return 0
-    return 2
+    echo -n "Stopping daemon: "$NAME
+	start-stop-daemon --stop --quiet --oknodo --pidfile $PIDFILE
+	rm $PIDFILE
+    echo "."
 }
 
 uninstall() {
@@ -106,5 +87,8 @@ case "$1" in
     start
     ;;
   *)
-    echo "Usage: $0 {start|stop|status|restart|uninstall}"
+    echo "Usage: $1 {start|stop|status|restart|uninstall}"
+    exit 1
 esac
+
+exit 0

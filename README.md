@@ -2,7 +2,7 @@
 
 Install:
 
-    # rsync -av --progress --exclude=.git ./ openwrt-host:/
+    # rsync -av --progress --exclude=.git --exclude=README.md --chown=root:root ./ openwrt-host:/
 
 Enable:
 

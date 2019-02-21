@@ -1,0 +1,2 @@
+# Set the command-line arguments to pass to the server.
+ARGS='--collector.diskstats.ignored-devices="^(ram|loop|fd)\\d+$" --collector.ntp --collector.wifi --no-collector.netstat --no-collector.sockstat --no-collector.zfs --no-collector.xfs'

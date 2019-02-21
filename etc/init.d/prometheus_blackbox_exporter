@@ -1,0 +1,46 @@
+#!/bin/sh /etc/rc.common
+# Black box exporter for prometheus written in Go
+
+DAEMON=/root/go/bin/blackbox_exporter
+NAME=prometheus_blackbox_exporter
+
+USER=root
+PIDFILE=/var/run/prometheus/$NAME.pid
+LOGFILE=/var/log/prometheus/$NAME.log
+
+START=10
+STOP=15
+EXTRA_COMMANDS="status"
+EXTRA_HELP="        status  Get service status"
+
+ARGS=""
+[ -r /etc/default/$NAME ] && . /etc/default/$NAME
+
+start()
+{
+  echo -n "Starting daemon: "$NAME
+	start-stop-daemon -u $USER -b -S -p $PIDFILE -m -x $DAEMON -- $ARGS >> $LOGFILE 2>&1
+	echo "."
+}
+
+stop()
+{
+  echo -n "Stopping daemon: "$NAME
+	start-stop-daemon -K -s TERM -p $PIDFILE -x $DAEMON
+	rm $PIDFILE
+  echo "."
+}
+
+status() {
+  printf "%-50s" "Checking $NAME..."
+  if [ -f $PIDFILE ]; then
+    PID=$(cat $PIDFILE)
+    if [ -z "$(ps | grep ${PID} | grep -v grep)" ]; then
+      printf "%s\n" "The process appears to be dead but pidfile still exists"
+    else    
+      echo "Running, the PID is $PID"
+    fi
+  else
+    printf "%s\n" "Service not running"
+  fi
+}

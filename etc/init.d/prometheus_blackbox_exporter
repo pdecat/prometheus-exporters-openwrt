@@ -13,7 +13,7 @@ STOP=15
 EXTRA_COMMANDS="status"
 EXTRA_HELP="        status  Get service status"
 
-ARGS=""
+ARGS="--config.file=/etc/prometheus/blackbox.yml"
 [ -r /etc/default/$NAME ] && . /etc/default/$NAME
 
 start()

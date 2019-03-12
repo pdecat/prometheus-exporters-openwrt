@@ -8,8 +8,8 @@ USER=root
 PIDFILE=/var/run/prometheus/$NAME.pid
 LOGFILE=/var/log/prometheus/$NAME.log
 
-START=10
-STOP=15
+START=25
+STOP=85
 EXTRA_COMMANDS="status"
 EXTRA_HELP="        status  Get service status"
 

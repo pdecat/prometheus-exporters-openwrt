@@ -12,3 +12,5 @@ Enable:
 For reference:
 
 - https://openwrt.org/docs/techref/initscripts
+
+Note: /var is a symlink to /tmp on target devices

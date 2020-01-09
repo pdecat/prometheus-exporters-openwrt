@@ -5,8 +5,8 @@ DAEMON=/opt/prometheus/node_exporter
 NAME=prometheus_node_exporter
 
 USER=root
-PIDFILE=/var/run/prometheus/$NAME.pid
-LOGFILE=/var/log/prometheus/$NAME.log
+PIDFILE=/var/run/$NAME.pid
+LOGFILE=/var/log/$NAME.log
 
 START=25
 STOP=85
@@ -19,6 +19,8 @@ ARGS=""
 start()
 {
   echo -n "Starting daemon: "$NAME
+  mkdir -p $(dirname $PIDFILE)
+  mkdir -p $(dirname $LOGFILE)
 	start-stop-daemon -u $USER -b -S -p $PIDFILE -m -x $DAEMON -- $ARGS >> $LOGFILE 2>&1
 	echo "."
 }
